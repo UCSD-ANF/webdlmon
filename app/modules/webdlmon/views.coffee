@@ -3,11 +3,20 @@ define [
 
   # Libs
   "backbone"
-], (app, Backbone) ->
+
+  # Utils
+  "modules/webdlmon/utils"
+], (app, Backbone, Utils) ->
 
   Views = {}
 
+  class Views.DlTable extends Backbone.View
+    tagName: "table"
+    className: "webdlmon"
+    #template: 'webdlmon/dltable'
+
   class Views.Thead extends Backbone.View
+    tagName: "thead"
     template: 'webdlmon/thead'
 
     serialize: ->
@@ -16,17 +25,9 @@ define [
       }
 
   class Views.Tbody extends Backbone.View
-    className: "foo"
-
+    tagName: "tbody"
     initialize: ->
       @collection.on 'reset', @render, @
-
-    # Rendering function
-    #render: (manage) ->
-    #  @collection.forEach (item) ->
-    #    @insertView new Views.DataloggerRow
-    #      model: item
-    #  return manage(this).render()
 
     beforeRender: ->
       @collection.each (thingy) ->
@@ -51,10 +52,16 @@ define [
     serialize: ->
       vals = []
       # Loop through showFields and extract the values we need
-      vals.push @model.get field for field in app.showFields
+      for field in app.showFields
+        val=@model.get field
+        txt=Utils.formatDl field, val
+        sort=Utils.sortorder field, val
+        color=Utils.colorize field, val
+        vals.push( [txt, sort, color] )
       return {
-        "id": @model.id
-        "vals": vals
+        "dlname": @model.get('dlname')
+        "color" : Utils.colorize('con', @model.get('con'))
+        "vals"  : vals
       }
 
   return Views

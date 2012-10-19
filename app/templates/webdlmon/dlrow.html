@@ -1,0 +1,17 @@
+<td
+  <% if (color) {%>
+  style="background-color: <%=color%>"
+  <% } %>
+  >
+  <%= dlname %>
+</td>
+<% for (var index=0; index < vals.length; index++) { %>
+<td
+  <% if (vals[index][2]) {%>
+  style="background-color: <%= vals[index][2] %>"
+  <% } %>
+  >
+  <span style="display:none"><%= vals[index][1] %></span>
+  <%= vals[index][0] %>
+</td>
+<% } %>

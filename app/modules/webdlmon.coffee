@@ -6,7 +6,11 @@ define [
 
   # Views
   "modules/webdlmon/views"
-], ( app, Backbone, Views ) ->
+
+  # Utility Functions
+  "modules/webdlmon/utils"
+
+], ( app, Backbone, Views, Utils ) ->
 
   # Create a new module
   Webdlmon = app.module
@@ -14,11 +18,14 @@ define [
   # Datalogger Model
   # ----------------
   class Webdlmon.Datalogger extends Backbone.Model
+    idAttribute = "dlname"
 
   # Dataloggers Collection
   # ----------------------
   class Webdlmon.Dataloggers extends Backbone.Collection
     model: Webdlmon.Datalogger
+    comparator: (a) ->
+      Utils.dlc_sortorder( a.toJSON() )
 
   # Orbdlstat2xmljson Dataloggers Collection
   # ------------------------
@@ -29,7 +36,7 @@ define [
     parse: (response,xhr) ->
       result = []
       jQuery.each response.dataloggers, (dlname, props) ->
-        props.values.id=dlname
+        props.values.dlname=dlname
         result.push(props.values)
 
       result

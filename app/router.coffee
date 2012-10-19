@@ -20,14 +20,23 @@ define [
       stations.url="http://anf.ucsd.edu/stations/data.php?callback=?"
 
       # Use the main layout
-      app.useLayout("main").setViews
-        # Attach the table header View to the layout.
-        "thead": new Webdlmon.Views.Thead
-          collection: dataloggers
+      app.useLayout("main")
+      #app.layout.setViews
+      #  # Attach the table header View to the layout.
+      #  "#dltable": new Webdlmon.Views.DlTable
+      #    views:
+      #      "thead" : new Webdlmon.Views.Thead
+      #      "tbody" : new Webdlmon.Views.Tbody
+      #        collection: dataloggers
+      #
+      mainTableView = app.layout.setView "#dltable", new Webdlmon.Views.DlTable
 
-        # Attach the table body View to the layout
-        "tbody": new Webdlmon.Views.Tbody
-          collection: dataloggers
+      # Set the first child view of the main table
+      mainTableView.setView new Webdlmon.Views.Thead
+
+      # Append the table body
+      mainTableView.setView new Webdlmon.Views.Tbody({collection: dataloggers}),
+        true
 
       app.layout.render()
 

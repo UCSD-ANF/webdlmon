@@ -14,6 +14,7 @@ require.config
     jquery: "../assets/js/libs/jquery"
     lodash: "../assets/js/libs/lodash"
     backbone: "../assets/js/libs/backbone"
+    "underscore.string": "../assets/js/libs/underscore.string"
 
   shim:
     # Backbone library depends on lodash and jQuery.

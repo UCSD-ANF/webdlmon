@@ -15,7 +15,43 @@ define [
     root: "/~davis/dlmon/"
 
     # Fields to show
-    showFields: ['con', 'gp1', 'gp24']
+    showFields: [
+      "con"
+      "gp24"
+      "gp1"
+      "nr24"
+      "opt"
+      "dlt"
+      "rtm"
+      "tput"
+      "ce"
+      "pbr"
+      "nl24"
+      "np24"
+      "ni24"
+      "dr"
+      "br24"
+      "bw24"
+      "clt"
+      "lcq"
+      "cld"
+      "m0"
+      "m1"
+      "m2"
+      "m3"
+      "m4"
+      "m5"
+      "dt"
+      "dv"
+      "da"
+      "gpss"
+      "gps"
+      "clq"
+      "lat"
+      "lon"
+      "elev"
+      "acok"
+    ]
 
   # Localize or create a new JavaScript Template object.
   JST = window.JST = window.JST || {}
