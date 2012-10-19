@@ -14,6 +14,9 @@ define [
     # The root path to run the application.
     root: "/~davis/dlmon/"
 
+    # Fields to show
+    showFields: ['con', 'gp1', 'gp24']
+
   # Localize or create a new JavaScript Template object.
   JST = window.JST = window.JST || {}
 

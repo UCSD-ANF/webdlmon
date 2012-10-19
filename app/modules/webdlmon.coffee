@@ -18,8 +18,6 @@ define [
   # Dataloggers Collection
   # ----------------------
   class Webdlmon.Dataloggers extends Backbone.Collection
-    constructor: (@url) ->
-      #noop
     model: Webdlmon.Datalogger
 
   # Orbdlstat2xmljson Dataloggers Collection
@@ -34,7 +32,7 @@ define [
         props.values.id=dlname
         result.push(props.values)
 
-        result
+      result
 
   # Station Model
   # -------------
@@ -45,8 +43,6 @@ define [
   # Stations Collection
   # -------------------
   class Webdlmon.Stations extends Backbone.Collection
-    constructor: (@url) ->
-      # noop
     model: Webdlmon.Station
     comparator: (a,b) ->
       statusOrder =

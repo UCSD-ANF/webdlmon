@@ -14,16 +14,25 @@ define [
 
     index: ->
       dataloggers = new Webdlmon.Orbdlstat2xmljson
-        url: "http://anf.ucsd.edu/tools/webdlmon/data.php?callback=?"
+      dataloggers.url="http://anf.ucsd.edu/tools/webdlmon/data.php?callback=?"
 
       stations = new Webdlmon.Db2jsonStations
-        url: "http://anf.ucsd.edu/stations/data.php?callback=?"
+      stations.url="http://anf.ucsd.edu/stations/data.php?callback=?"
 
-      app.useLayout("main")
+      # Use the main layout
+      app.useLayout("main").setViews
+        # Attach the table header View to the layout.
+        "thead": new Webdlmon.Views.Thead
+          collection: dataloggers
+
+        # Attach the table body View to the layout
+        "tbody": new Webdlmon.Views.Tbody
+          collection: dataloggers
+
       app.layout.render()
 
       # Fetch the data
-      dataloggers.fetch
-      stations.fetch
+      dataloggers.fetch()
+      stations.fetch()
 
   return Router
