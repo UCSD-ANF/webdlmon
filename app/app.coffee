@@ -12,10 +12,10 @@ define [
   # module creation
   app =
     # The root path to run the application.
-    root: "/"
+    root: "/~davis/dlmon/"
 
   # Localize or create a new JavaScript Template object.
-  JST = window.JST = window.JST ? {}
+  JST = window.JST = window.JST || {}
 
   # Configure Layout Manager with Backbone Boilerplate defaults.
   Backbone.LayoutManager.configure
@@ -35,11 +35,12 @@ define [
         return JST[path]
       else
         # Put fetch into 'async-mode'.
-        done = @async
+        done = @async()
 
         # Seek out the template asynchronously.
         return $.ajax( url: app.root + path ).then (contents) ->
           done( JST[path] = _.template(contents) )
+          return
 
   # Mix Backbone.Events, modules, and layout management into the app
   # object
