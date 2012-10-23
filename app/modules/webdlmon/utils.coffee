@@ -21,7 +21,7 @@ define [
       # use this lookup table
       #switch fieldname
 
-      return dlValues[fieldName]?
+      return dlValues[fieldName] if dlValues[fieldName]?
   
     # sorting procedures for the datalogger model collection
     # key is the name of the field that we are sorting, 
@@ -39,12 +39,13 @@ define [
         # mimics the original procedure used in dlmon rather than the
         # XSLT webdlmon method
         runstat = dlValues.con
-        sortorder = 1 # default value
+        sortorder = "1_#{dlValues[keyName]}" # default value
         if runstat?
           if ( runstat == "no" && dlValues.rtm > -3600.0)
             runstat = "su"
             dlValues[con] = runstat
           sortorder = Utils.sortorder "con", dlValues
+          sortorder = "#{sortorder}_#{dlValues[keyName]}"
         return sortorder
 
 

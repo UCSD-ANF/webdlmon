@@ -25,7 +25,7 @@ define [
   class Webdlmon.Dataloggers extends Backbone.Collection
     model: Webdlmon.Datalogger
     comparator: (a) ->
-      Utils.sortorder(a.get['dlname'], a.toJSON() )
+      Utils.sortorder('dlname', a.toJSON() )
 
   # Orbdlstat2xmljson Dataloggers Collection
   # ------------------------
