@@ -134,15 +134,15 @@ define [
         return color
 
       acok: (fieldName, dlValues) ->
-        color = "#ffff00"
+        color = "#ffff00" #unknown
         value = dlValues[fieldName]
-        if (value != undefined)
-          value=parseInt value, 10
-          if !isNaN value
+        if value?
+          value=parseInt value
+          if !(isNaN value)
             if value >=1
-              color = "#00ff00"
-            else if value = 0
-              color = "#ff0000"
+              color = "#00ff00" # good
+            else if value == 0
+              color = "#ff0000" # bad
         return color
         
       dlt: (fieldName, dlValues) ->
@@ -431,11 +431,11 @@ define [
         txt = "-" # default return value
         value = dlValues[fieldName]
         if value?
-          value=parseInt(value)
-          if !isNaN value
+          value=parseInt value
+          if !(isNaN value)
             if value >= 1
               txt = "1"
-            else if value = 0
+            else if value == 0
               txt = "0"
         return txt
         
