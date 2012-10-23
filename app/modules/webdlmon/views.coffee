@@ -30,9 +30,9 @@ define [
       @collection.on 'reset', @render, @
 
     beforeRender: ->
-      @collection.each (thingy) ->
+      @collection.each (model) ->
         @insertView new Views.DataloggerRow
-          model: thingy
+          model: model
       , @
 
   class Views.DataloggerRow extends Backbone.View
@@ -43,25 +43,32 @@ define [
     initialize: ->
       @model.on "change", ->
         @render()
-      , @
+      , @ # return this object for chaining
 
       @model.on "destroy", ->
         @remove()
-      , @
+      , @ # return this object for chaining
 
     serialize: ->
       vals = []
-      # Loop through showFields and extract the values we need
-      for field in app.showFields
-        val=@model.get field
-        txt=Utils.formatDl field, val
-        sort=Utils.sortorder field, val
-        color=Utils.colorize field, val
-        vals.push( [txt, sort, color] )
+      # Handle dlname explicitly since we always want it to appear
+      vals.push @formatize 'dlname'
+      
+      # Loop through showFields and format the values we need
+      vals.push @formatize(fieldName) for fieldName in app.showFields
+      
+      # return the data for use by the template
       return {
-        "dlname": @model.get('dlname')
-        "color" : Utils.colorize('con', @model.get('con'))
         "vals"  : vals
       }
+      
+    # Return a tuple of [ formattedText, sortValue, color ]
+    formatize: (fieldName) ->
+      extracted=@model.toJSON()
+      return [
+        Utils.formatDl fieldName, extracted
+        Utils.sortorder fieldName, extracted
+        Utils.colorize fieldName, extracted 
+      ]
 
   return Views

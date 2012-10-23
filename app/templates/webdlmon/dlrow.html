@@ -1,17 +1,10 @@
+<% _.each(vals, function(value) { %>
 <td
-  <% if (color) {%>
-  style="background-color: <%=color%>"
+  <% if (value[2]) {%>
+  style="background-color: <%= value[2] %>"
   <% } %>
   >
-  <%= dlname %>
+  <span style="display:none"><%= value[1] %></span>
+  <%= value[0] %>
 </td>
-<% for (var index=0; index < vals.length; index++) { %>
-<td
-  <% if (vals[index][2]) {%>
-  style="background-color: <%= vals[index][2] %>"
-  <% } %>
-  >
-  <span style="display:none"><%= vals[index][1] %></span>
-  <%= vals[index][0] %>
-</td>
-<% } %>
+<% }); %>

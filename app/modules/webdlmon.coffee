@@ -25,7 +25,7 @@ define [
   class Webdlmon.Dataloggers extends Backbone.Collection
     model: Webdlmon.Datalogger
     comparator: (a) ->
-      Utils.dlc_sortorder( a.toJSON() )
+      Utils.sortorder(a.get['dlname'], a.toJSON() )
 
   # Orbdlstat2xmljson Dataloggers Collection
   # ------------------------
@@ -51,16 +51,15 @@ define [
   # -------------------
   class Webdlmon.Stations extends Backbone.Collection
     model: Webdlmon.Station
-    comparator: (a,b) ->
+    
+    comparator: (a) ->
       statusOrder =
         active: 1
         adopt: 2
         decom: 3
 
-      if a.get('status') == b.get('status')
-        a.get('id') - b.get('id')
-      else
-        statusOrder[a.get('status')] - statusOrder[b.get('status')]
+      # Sort by status, then station id
+      statusOrder[a.get 'status' ] + "_#{a.get 'id'}"
 
   # Db2json Stations Collection
   # ---------------------------

@@ -21,14 +21,6 @@ define [
 
       # Use the main layout
       app.useLayout("main")
-      #app.layout.setViews
-      #  # Attach the table header View to the layout.
-      #  "#dltable": new Webdlmon.Views.DlTable
-      #    views:
-      #      "thead" : new Webdlmon.Views.Thead
-      #      "tbody" : new Webdlmon.Views.Tbody
-      #        collection: dataloggers
-      #
       mainTableView = app.layout.setView "#dltable", new Webdlmon.Views.DlTable
 
       # Set the first child view of the main table
