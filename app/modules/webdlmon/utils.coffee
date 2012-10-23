@@ -349,9 +349,7 @@ define [
         value = dlValues[fieldName]
         if value != '-'
           aval = Math.abs value
-          if aval >= Math.pow(10,4)
-            color = '#ff0000'
-          else if aval > 5 * (Math.pow 10,3)
+          if aval > 5 * (Math.pow 10,3)
             color = '#ffd0d0'
           else if aval > 2 * (Math.pow 10,3)
             color = '#ffffd0'
