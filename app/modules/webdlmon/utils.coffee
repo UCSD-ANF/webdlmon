@@ -500,9 +500,9 @@ define [
           aval = Math.abs value
           if aval >= Math.pow(10,4)
             txt = _s.sprintf '%.2fs', value/Math.pow(10,6)
-          else if aval = Math.pow(10,3)
+          else if aval >= Math.pow(10,3)
             txt = _s.sprintf '%.1fms', value/Math.pow(10,3)
-          else txt= _s.sprintf '%dus', value
+          else txt= _s.sprintf '%dus', +value
         return txt
 
     # Takes a time in minutes
