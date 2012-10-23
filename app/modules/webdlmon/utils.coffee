@@ -80,6 +80,8 @@ define [
           return @colorizers.nlnp fieldName, dlValues
         when 'br24', 'bw24'
           return @colorizers.brw24 fieldName, dlValues
+        when 'm0', 'm1', 'm2', 'm3', 'm4', 'm5'
+          return @colorizers.massposition fieldName, dlValues
         else
         # No default color
           return null
@@ -357,6 +359,20 @@ define [
             color = '#d0ffd0'
           else color = '#d0d0ff'
           
+        return color
+        
+      massposition: (fieldName, dlValues) ->
+        color = ''
+        value=dlValues[fieldName]
+        if value != '-'
+          aval = Math.abs value
+          if aval >= 50
+            color = '#ff0000'
+          else if aval >= 35
+            color = '#ffff00'
+          else if aval >= 20
+            color = '#a0ffa0'
+          else color = '#d0d0ff'
         return color
     
     # master channel value formatter
