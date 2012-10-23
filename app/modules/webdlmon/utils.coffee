@@ -78,6 +78,8 @@ define [
           return @colorizers.nr fieldName, dlValues
         when "nl24", "np24"
           return @colorizers.nlnp fieldName, dlValues
+        when 'br24', 'bw24'
+          return @colorizers.brw24 fieldName, dlValues
         else
         # No default color
           return null
@@ -292,6 +294,14 @@ define [
           else if value > 1.0
             color = '#ffff00'
           else color = '#d0d0ff'
+        return color
+        
+      brw24: (fieldName, dlValues) ->
+        color = ''
+        value = dlValues[fieldName]
+        if value != '-'
+          color='#d0d0ff'
+        return color
     
     # master channel value formatter
     # --------------------------------
