@@ -315,6 +315,32 @@ define [
         if value != '-'
           color='#d0d0ff'
         return color
+        
+      lcq: (fieldName, dlValues) ->
+        color = ''
+        value = dlValues[fieldName]
+        if value != '-'
+          if value == 'inf'
+            color = '#ff0000'
+          else
+            color='#ff0000'
+            if value >= 10.0 && value <= 60.0
+              c = Math.floor( (63.0*(value-10.0)/50.5)+0.5 )
+              color = _s.sprintf '#ff%2xd0', 192+c
+            else if value > 60.0 && value < 90.0
+              color = '#f0ffd0'
+              if value < 80.0
+                color = '#ffffd0'
+            else if value >= 90.0
+              if value < 95.0
+                c = Math.floor( (63.0*(95.0-value)/5.0)+0.5)
+                color = _s.sprintf '#d0ff%2x', 255-c
+              else if value >= 95.0 && value < 100.0
+                c = Math.floor((63.0*(100.0-value)/5.0)+0.5)
+                color = _s.sprintf '#d0%2xff', 192+c
+              else if value >= 100.0
+                color = '#d0d0ff'
+        return color
     
     # master channel value formatter
     # --------------------------------
