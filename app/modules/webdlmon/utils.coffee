@@ -341,6 +341,23 @@ define [
               else if value >= 100.0
                 color = '#d0d0ff'
         return color
+        
+      cld: (fieldName, dlValues) ->
+        color = ''
+        value = dlValues[fieldName]
+        if value != '-'
+          aval = Math.abs value
+          if aval >= Math.pow(10,4)
+            color = '#ff0000'
+          else if aval > 5 * (Math.pow 10,3)
+            color = '#ffd0d0'
+          else if aval > 2 * (Math.pow 10,3)
+            color = '#ffffd0'
+          else if aval >= Math.pow(10,3)
+            color = '#d0ffd0'
+          else color = '#d0d0ff'
+          
+        return color
     
     # master channel value formatter
     # --------------------------------
@@ -361,6 +378,8 @@ define [
           return @formatters.nlnpni fieldName, dlValues
         when 'dr','br24','bw24'
           return @formatters.bytes fieldName, dlValues
+        when 'cld'
+          return @formatters.microseconds fieldName, dlValues
         else
           return dlValues[fieldName]
 
@@ -455,6 +474,19 @@ define [
             txt = _s.sprintf '%.1fk', value/Math.pow(10,3)
           else
             txt = _s.sprintf '%d', value
+        return txt
+        
+      microseconds: (fieldName, dlValues) ->
+        # Convert microseconds to human readable seconds
+        txt = ''
+        value = dlValues[fieldName]
+        if value != '-'
+          aval = Math.abs value
+          if aval >= Math.pow(10,4)
+            txt = _s.sprintf '%.2fs', value/Math.pow(10,6)
+          else if aval = Math.pow(10,3)
+            txt = _s.sprintf '%.1fms', value/Math.pow(10,3)
+          else txt= _s.sprintf '%dus', value
         return txt
 
     # Takes a time in minutes
