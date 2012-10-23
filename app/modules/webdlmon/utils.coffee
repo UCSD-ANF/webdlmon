@@ -295,6 +295,19 @@ define [
             color = '#ffff00'
           else color = '#d0d0ff'
         return color
+      
+      dr: (fieldName, dlValues) ->
+        color = ''
+        value = dlValues[fieldName]
+        if value != '-'
+          if value >= Math.pow(10,4)
+            color='#d0d0ff'
+          else if value >= 500
+            color='#a0ffa0'
+          else if value > 0
+            color='#ffffa0'
+          else color='#ffa0a0'
+        return color
         
       brw24: (fieldName, dlValues) ->
         color = ''
