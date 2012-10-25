@@ -374,8 +374,9 @@ define [
           else color = '#d0d0ff'
         return color
     
-    # master channel value formatter
+    # Util.formatDl
     # --------------------------------
+    # master channel value formatter
     formatDl: (fieldName, dlValues) ->
       return @formatters[fieldName](fieldName, dlValues) if @formatters[fieldName]?
       
