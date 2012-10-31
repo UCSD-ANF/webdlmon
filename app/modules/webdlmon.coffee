@@ -84,18 +84,17 @@ define [
   # ANF web site
   class Webdlmon.Db2jsonStations extends Webdlmon.Stations
     parse: (response,xhr) ->
-      result = []
-
-      # parse active,adopt,decom objects returned in this feed
-      jQuery.each response, (status,stations) ->
+      parsed = (_ response).map (status,stations) ->
+        # Flatten the returned station for use by the Station model
         jQuery.each stations, (sta, props) ->
+          # flatten sta into props object
           props.sta=sta
+          # Synthetic id based on snet_sta to match the dlname
           props.id="#{props.snet}_#{sta}"
           # Put the station's active/adopt/decom into props
           props.status=status
-          result.push(props)
-
-      result
+          props
+      parsed
 
   # Webdlmon Views
   # --------------
