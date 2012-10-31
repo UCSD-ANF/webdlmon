@@ -33,12 +33,7 @@ define [
   # stream that is currently spit out by the ANF web site
   class Webdlmon.Orbdlstat2xmljson extends Webdlmon.Dataloggers
     parse: (response,xhr) ->
-      #result = []
-      #jQuery.each response.dataloggers, (dlname, props) ->
-      #  props.values.dlname=dlname
-      #  result.push(props.values)
-
-      #result
+      # flatten returned dataloggers objects
       parsed = (_ response.dataloggers).map (props, dlname, list) ->
         mapres = props.values
         mapres.dlname=dlname
