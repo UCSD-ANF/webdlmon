@@ -83,6 +83,8 @@ define [
           return @colorizers.brw24 fieldName, dlValues
         when 'm0', 'm1', 'm2', 'm3', 'm4', 'm5'
           return @colorizers.massposition fieldName, dlValues
+        when 'lat', 'lon', 'elev'
+          return @colorizers.latlon fieldName, dlValues
         else
         # No default color
           return null
@@ -373,14 +375,169 @@ define [
             color = '#a0ffa0'
           else color = '#d0d0ff'
         return color
+        
+      dt: (fieldName, dlValues) ->
+        color = ''
+        value = dlValues[fieldName]
+        if value != '-'
+          if value >= 50.0
+            color='#ff0000'
+          else if value >=40.0
+            color='#ffff00'
+          else if value >=3.0
+            color='#a0ffa0'
+          else if value >= -10.0
+            color='#d0d0ff'
+          else if value >= -20.0
+            color='#0000ff'
+          else color='#ffd0ff'
+        color
+            
+      dv: (fieldName, dlValues) ->
+        color=''
+        value=dlValues[fieldName]
+        if value != '-'
+          if value >= 12 || value <= 14
+            color='#a0ffa0'
+          else if ( value > 14 && value <= 14.5 ) || ( value > 11.8 && value < 12 )
+            color = '#f0ffd0'
+          else if value > 14.5 || value <= 11.7
+            color = '#ff8080'
+        color
+        
+      da: (fieldName, dlValues) ->
+        color=''
+        value = dlValues[fieldName]
+        if value != '-'
+          if value >= 1.00
+            color = '#ff0000'
+          else if value >= 0.2
+            color = '#a0ffa0'
+          else color = '#d0d0ff'
+        color
+        
+      gpss: (fieldName, dlValues) ->
+        color=''
+        value = dlValues[fieldName]
+        if value != '-'
+          switch value
+            when 'on', 'ona', 'onc'
+              color='#d0d0ff'
+            when 'off'
+              color='#ffd0aa'
+            when 'offg', 'offp'
+              color='#d0ffd0'
+            when 'offt', 'offc'
+              color='#ffd0aa'
+            when 'cs'
+              color='#ff0000'
+            else
+              color='#ffd0d0'
+        color
+        
+      gps: (fieldName, dlValues) ->
+        color=''
+        value=dlValues[fieldName]
+        fr=0
+        el=0
+        d=0
+        if value.match /elck/
+          el=1
+        if value.match /fr/
+          fr=1
+        if value.match /1d/
+          d=1
+        if value.match /2d/
+          d=2
+        if value.match /3d/
+          d=3
+          
+        if fr != 0 || el != 0 || d != 0
+          switch d
+            when 0
+              value = ''
+              value += 'l' if el != 0
+              value += 'f' if fr != 0
+            when 1, 2, 3
+              value = "#{d}D"
+              value += 'f' if fr != 0
+              
+        if value != '-'
+          switch value
+            when 'L', '3D'
+              color = '#d0d0ff'
+            when '3Df'
+              color = '#aaaaff'
+            when '2D'
+              color = '#d0ffd0'
+            when '2Df'
+              color = '#aaffaa'
+            when '1D'
+              color = '#ffffd0'
+            when '1Df'
+              color = '#ffffaa'
+            when 'lf'
+              color = '#d0ffd0'
+            when 'off'
+              color = '#ffd0aa'
+            when 'U', 'u', 'nb'
+              color = '#ffd0d0'
+            when 'uf'
+              color = '#ffaaaa'
+            else color = '#ff0000'
+        color
+        
+      clq: (fieldName, dlValues) ->
+        color=''
+        value=dlValues[fieldName]
+        if value != '-'
+          switch value
+            when '5', 'l', 'ex', 'g'
+              color = '#d0d0ff'
+            when '4', 't', 'k'
+              color = '#d0ffd0'
+            when '3', 'h'
+              color = '#f0ffd0'
+            when '2', '1', '0'
+              color = '#ff8000'
+            when 'cs'
+              color = '#ff0000'
+            else
+              color = '#ff0000'
+        color
+        
+      latlon: (fieldName, dlValues) ->
+        color=''
+        value=dlValues[fieldName]
+        color = '#d0d0ff' if value != '-'
+        color
+        
+      pmp: (fieldName, dlValues) ->
+        color = ''
+        value = dlValues['opt']
+        spi=0
+        spo=0
+        spi = 1 if value.match /isp1/
+        spo = 1 if value.match /isp2/
+        
+        if spi
+          if spo
+            color='#ff0000'
+          else
+            color='#00ff00'
+        color
+            
+
+        
     
     # Util.formatDl
     # --------------------------------
     # master channel value formatter
     formatDl: (fieldName, dlValues) ->
+      # Use a formatter with the same name as the fieldName if available
       return @formatters[fieldName](fieldName, dlValues) if @formatters[fieldName]?
       
-      # Lookup table for fieldnames without a dedicated formatter
+      # Otherwise, Lookup table for fieldnames without a dedicated formatter
       switch fieldName
         when "gp1","gp24"
           return @formatters.gp fieldName, dlValues
@@ -396,6 +553,14 @@ define [
           return @formatters.bytes fieldName, dlValues
         when 'cld'
           return @formatters.microseconds fieldName, dlValues
+        when 'dt'
+          return @formatters.degreesC fieldName, dlValues
+        when 'dv'
+          return @formatters.volts fieldName, dlValues
+        when 'da'
+          return @formatters.ampsInMilliamps fieldName, dlValues
+        when 'lat', 'lon'
+          return @formatters.latlon fieldName, dlValues
         else
           return dlValues[fieldName]
 
@@ -504,7 +669,114 @@ define [
             txt = _s.sprintf '%.1fms', value/Math.pow(10,3)
           else txt= _s.sprintf '%dus', +value
         return txt
+        
+      degreesC: (fieldName, dlValues) ->
+        # format degrees given in Centigrade as a whole number
+        txt = ''
+        value = dlValues[fieldName]
+        if value != '-'
+          txt = _s.sprintf '%dC', +value
+        return txt
+        
+      volts: (fieldName, dlValues) ->
+        txt = ''
+        value = dlValues[fieldName]
+        if value != '-'
+          txt = _s.sprintf '%.1fV', +value
+        txt
+        
+      ampsInMilliamps: (fieldName, dlValues) ->
+        txt = ''
+        value = dlValues[fieldName]
+        if value != '-'
+          txt = _s.sprintf '%dmA', value*1000
+          
+      gps: (fieldName, dlValues) ->
+        txt=''
+        value=dlValues[fieldName]
+        fr=0
+        el=0
+        d=0
+        if value.match /elck/
+          el=1
+        if value.match /fr/
+          fr=1
+        if value.match /1d/
+          d=1
+        if value.match /2d/
+          d=2
+        if value.match /3d/
+          d=3
 
+        if fr != 0 || el != 0 || d != 0
+          switch d
+            when 0
+              value = ''
+              value += 'l' if el != 0
+              value += 'f' if fr != 0
+            when 1, 2, 3
+              value = "#{d}D"
+              value += 'f' if fr != 0
+
+        if value != '-'
+          txt = value
+        value
+        
+      clq: (fieldName, dlValues) ->
+        txt = ''
+        value = dlValues[fieldName]
+        
+        if value != '-'
+          switch value
+            when '5', 'l'
+              txt='L'
+            when 'ex'
+              txt='EX'
+            when 'g'
+              txt = 'IG'
+            when '4', 't'
+              txt = 'T'
+            when '3', 'h'
+              txt = 'H'
+            when '2','1','0'
+              txt = value
+            when 'cs'
+              txt = 'IC'
+            else
+              txt = 'IC'
+        txt
+        
+      latlon: (fieldName, dlValues) ->
+        txt = ''
+        value = dlValues[fieldName]
+        if value != '-'
+          txt = _s.sprintf '%.2f', +value
+        txt
+        
+      elev: (fieldName, dlValues) ->
+        txt = ''
+        value = dlValues[fieldName]
+        if value != '-'
+          txt = _s.sprintf '%dm', value*1000.0
+        txt
+        
+      pmp: (fieldName, dlValues) ->
+        txt = ''
+        value = dlValues['opt']
+        if value != '-'
+          spi = 0
+          spo = 0
+          
+          spi = 1 if value.match /isp1/
+          spo = 1 if value.match /isp2/
+          
+          if spi
+            if spo
+              txt = 'On'
+            else
+              txt = 'I'
+        txt
+          
     # Takes a time in minutes
     # Returns an array of time in days, hours, minutes, seconds [, sign]
     get_dhms: (minutes) ->

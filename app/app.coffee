@@ -21,6 +21,7 @@ define [
       "gp1"
       "nr24"
       "opt"
+      "pmp"
       "dlt"
       "rtm"
       "tput"

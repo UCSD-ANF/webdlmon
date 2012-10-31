@@ -29,17 +29,34 @@ define [
 
   # Orbdlstat2xmljson Dataloggers Collection
   # ------------------------
-
   # This is a dedicated parser class for the classic orbdlstat2xml2json
   # stream that is currently spit out by the ANF web site
   class Webdlmon.Orbdlstat2xmljson extends Webdlmon.Dataloggers
     parse: (response,xhr) ->
-      result = []
-      jQuery.each response.dataloggers, (dlname, props) ->
-        props.values.dlname=dlname
-        result.push(props.values)
+      #result = []
+      #jQuery.each response.dataloggers, (dlname, props) ->
+      #  props.values.dlname=dlname
+      #  result.push(props.values)
 
-      result
+      #result
+      parsed = (_ response.dataloggers).map (props, dlname, list) ->
+        mapres = props.values
+        mapres.dlname=dlname
+        return mapres
+      return parsed
+
+  # DlmonDataloggers
+  # ----------------
+  # This is a dedicated parser class for the new dlmon service being written
+  # by Jeff Laughlin.
+  class Webdlmon.DlmonDataloggers
+    parse: (response, xhr) ->
+      parsed = (_ response).map (props) ->
+        mapres = props.values
+        mapres.dlname = props.name
+        return mapres
+        
+      return parsed
 
   # Station Model
   # -------------

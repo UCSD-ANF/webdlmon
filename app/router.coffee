@@ -15,6 +15,8 @@ define [
     index: ->
       dataloggers = new Webdlmon.Orbdlstat2xmljson
       dataloggers.url="http://anf.ucsd.edu/tools/webdlmon/data.php?callback=?"
+      #dataloggers = new Webdlmon.DlmonDataloggers
+      #dataloggers.url="http://anfdevl.ucsd.edu:7000/dlmon?callback=?"
 
       stations = new Webdlmon.Db2jsonStations
       stations.url="http://anf.ucsd.edu/stations/data.php?callback=?"
