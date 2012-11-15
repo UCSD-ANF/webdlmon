@@ -808,5 +808,19 @@ define [
       else
         txt = _s.vsprintf "          %s%2.2ds", [sign, s]
       return txt
+    
+    # Returns true if the fieldName in question has an RRDgraph
+    # Currently determines this by looking at the fields listed in 
+    # app.stations_status_defs  
+    hasgraph: (fieldName) ->
+      sd=app.station_status_defs
+      res=false
+      if sd[fieldName]? && sd[fieldName].graph?
+        res=sd[fieldName].graph
+      res
+    
+    # Works like the PHP nl2br function. Replaces newlines with HTML <br />  
+    nl2br: (input_string) ->
+      return input_string.replace /(\r\n|\r|\n)/g, "<br />"
 
   return Utils

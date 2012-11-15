@@ -32,6 +32,10 @@ define [
   # This is a dedicated parser class for the classic orbdlstat2xml2json
   # stream that is currently spit out by the ANF web site
   class Webdlmon.Orbdlstat2xmljson extends Webdlmon.Dataloggers
+    constructor: (models, options)->
+      @type = "Orbdlstat2xmljson Dataloggers feed"
+      super models, options
+
     parse: (response,xhr) ->
       # flatten returned dataloggers objects
       parsed = (_ response.dataloggers).map (props, dlname, list) ->
@@ -44,7 +48,11 @@ define [
   # ----------------
   # This is a dedicated parser class for the new dlmon service being written
   # by Jeff Laughlin.
-  class Webdlmon.DlmonDataloggers
+  class Webdlmon.DlmonDataloggers extends Webdlmon.Dataloggers
+    constructor: (models, options)->
+      @type = "Dlmon Dataloggers feed"
+      super models, options
+
     parse: (response, xhr) ->
       parsed = (_ response).map (props) ->
         mapres = props.values
@@ -52,6 +60,16 @@ define [
         return mapres
         
       return parsed
+
+  # DataloggersFactory
+  # ------------------
+  # Allow run-time selection of the Dataloggers type
+  class Webdlmon.DataloggersFactory
+    makeDataloggers: (type, models, options) ->
+      switch type
+        when "dlmon" then new Webdlmon.DlmonDataloggers models, options
+        when "orbdlstat2xmljson" then new Webdlmon.Orbdlstat2xmljson models, options
+        else new Webdlmon.Dataloggers models, options
 
   # Station Model
   # -------------
@@ -78,6 +96,10 @@ define [
   # Dedicated parser class for the db2json static file spit out by the
   # ANF web site
   class Webdlmon.Db2jsonStations extends Webdlmon.Stations
+    constructor: (models, options) ->
+      @type = "Db2json Stations"
+      super models, options
+
     parse: (response,xhr) ->
       parsed = (_ response).map (status,stations) ->
         # Flatten the returned station for use by the Station model
@@ -90,6 +112,15 @@ define [
           props.status=status
           props
       parsed
+
+  # StationsFactory
+  # ---------------
+  # Allow run-time selection of Stations subclass
+  class Webdlmon.StationsFactory
+    makeStations: (type, models, options) ->
+      switch type
+        when "db2json" then new Webdlmon.Db2jsonStations models, options
+        else new Webdlmon.Stations models, options
 
   # Webdlmon Views
   # --------------

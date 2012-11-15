@@ -1,10 +1,14 @@
 <% _.each(vals, function(value) { %>
 <td
-  <% if (value[2]) {%>
-  style="background-color: <%= value[2] %>"
+  <% if (value["color"]) {%>
+  style="background-color: <%= value["color"] %>"
   <% } %>
   >
-  <span style="display:none"><%= value[1] %></span>
-  <%= value[0] %>
+  <span style="display:none"><%= value["sort"] %></span>
+  <% if (value["graph"]) {%>
+  <a href="#dataloggers/<%= value["id"] %>/graph/<%= value["field"] %>"><%= value["txt"] %></a>
+  <% } else {%>
+  <%= value["txt"] %>
+  <% } %>
 </td>
 <% }); %>

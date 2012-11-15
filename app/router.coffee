@@ -10,19 +10,25 @@ define [
   # you can attach sub routers here.
   Router = Backbone.Router.extend
     routes:
+      'dataloggers/:dlname/graph/:field' : 'graph'
       "": "index"
 
-    index: ->
-      dataloggers = new Webdlmon.Orbdlstat2xmljson
-      dataloggers.url="http://anf.ucsd.edu/tools/webdlmon/data.php?callback=?"
-      #dataloggers = new Webdlmon.DlmonDataloggers
-      #dataloggers.url="http://anfdevl.ucsd.edu:7000/dlmon?callback=?"
+    graph: (dlname, field) ->
+      console.log "Route 'dataloggers/#{dlname}/graph/#{field}' matched to 'graph'"
 
-      stations = new Webdlmon.Db2jsonStations
-      stations.url="http://anf.ucsd.edu/stations/data.php?callback=?"
+    index: ->
+      dlsFactory = new Webdlmon.DataloggersFactory
+      dataloggers = dlsFactory.makeDataloggers app.dataloggersfeed.type
+      dataloggers.url=app.dataloggersfeed.url
+
+      stationsFactory = new Webdlmon.StationsFactory
+      stations = stationsFactory.makeStations app.stationsfeed.type
+      stations.url=app.stationsfeed.url
 
       # Use the main layout
       app.useLayout("main")
+
+      # Insert the dltable
       mainTableView = app.layout.setView "#dltable", new Webdlmon.Views.DlTable
 
       # Set the first child view of the main table
@@ -31,6 +37,9 @@ define [
       # Append the table body
       mainTableView.setView new Webdlmon.Views.Tbody({collection: dataloggers}),
         true
+
+      # Insert the Legend
+      app.layout.setView "#webdlmon-legend", new Webdlmon.Views.DlmonLegend
 
       app.layout.render()
 

@@ -20,9 +20,40 @@ define [
     template: 'webdlmon/thead'
 
     serialize: ->
+      # Map the displayed names of the fields that we are to show
+      
+      sds=app.station_status_defs
+      fields=app.showFields
+      
+      res=fields.map (field) ->
+        sd = {}
+        sd = sds[field] if sds[field]?
+        sd=(_ sd).defaults({title: field, description: field})
+        sd=(_ sd).pick('title','description')
+        return sd
+        
       return {
-        "showFields": app.showFields
+        "showFields": res
       }
+
+  class Views.DlmonLegend extends Backbone.View
+    template: "webdlmon/legend"
+    
+    serialize: ->
+      fields=app.showFields
+      sds=app.station_status_defs
+      
+      res=fields.map (field) ->
+        sd = {}
+        sd = sds[field] if sds[field]?
+        sd=(_ sd).defaults({title: field, description: field})
+        sd=(_ sd).pick('title','description')
+        sd.description=Utils.nl2br sd.description
+        return sd
+      return {
+        fields: res
+      }
+
 
   class Views.Tbody extends Backbone.View
     tagName: "tbody"
@@ -52,7 +83,7 @@ define [
     serialize: ->
       vals = []
       # Handle dlname explicitly since we always want it to appear
-      vals.push @formatize 'dlname'
+      #vals.push @formatize 'dlname'
       
       # Loop through showFields and format the values we need
       vals.push @formatize(fieldName) for fieldName in app.showFields
@@ -65,10 +96,17 @@ define [
     # Return a tuple of [ formattedText, sortValue, color ]
     formatize: (fieldName) ->
       extracted=@model.toJSON()
-      return [
-        Utils.formatDl fieldName, extracted
-        Utils.sortorder fieldName, extracted
-        Utils.colorize fieldName, extracted 
-      ]
+      txt = Utils.formatDl fieldName, extracted
+      sort = Utils.sortorder fieldName, extracted
+      color = Utils.colorize fieldName, extracted
+      graph = Utils.hasgraph fieldName
+      res =
+        id: @model.get "dlname"
+        field: fieldName
+        txt: txt
+        sort: sort
+        color: color
+        graph: graph
+      return res
 
   return Views

@@ -1,6 +1,5 @@
 <tr>
-  <th>dlname</th>
-  <% _.each (showFields, function(fieldName){ %>
-  <th><%=fieldName%></th>
+  <% _.each (showFields, function(field){ %>
+  <th title="<%= field.description %>"><%=field.title%></th>
   <% }) %>
 </tr>

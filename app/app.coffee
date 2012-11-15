@@ -14,9 +14,19 @@ define [
     # The root path to run the application.
     root: "/~davis/dlmon/"
 
+    dataloggersfeed:
+      url: "http://anf.ucsd.edu/tools/webdlmon/data.php?callback=?"
+      type: "orbdlstat2xmljson"
+      #url: "http://anfdevl.ucsd.edu:7000/dlmon?callback=?"
+      #type: "dlmon"
+
+    stationsfeed:
+      url: "http://anf.ucsd.edu/stations/data.php?callback=?"
+      type: "db2json"
+
     # Fields to show
     showFields: [
-      "con"
+      "dlname"
       "gp24"
       "gp1"
       "nr24"
@@ -280,14 +290,14 @@ not blue - Running time since connection has been down."""
         sizestr: "XXXXX"
         justify: "center"
         sort: "real"
-        using: [m0, m1, m2]
+        using: ["m0", "m1", "m2"]
         description: "Largest sesimometer mass position for physical channels 0-2. Ranges from -128 to +127"
       "m3-5":
         title: "m0-5"
         sizestr: "XXXXX"
         justify: "center"
         sort: "real"
-        using: [m3, m4, m5]
+        using: ["m3", "m4", "m5"]
         description: "Largest sesimometer mass position for physical channels 3-5. Ranges from -128 to +127"
       dt:
         title: "temp"
