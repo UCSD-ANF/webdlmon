@@ -12,11 +12,16 @@ require.config
 
     # Libraries.
     jquery: "../assets/js/libs/jquery"
+    "jquery.metadata": "../assets/js/libs/jquery.metadata"
+    "jquery.tablesorter": "../assets/js/libs/jquery.tablesorter"
     lodash: "../assets/js/libs/lodash"
     backbone: "../assets/js/libs/backbone"
     "underscore.string": "../assets/js/libs/underscore.string"
 
   shim:
+    # jquery.metadata depends on jQuery
+    "jquery.metadata": ["jquery"]
+    "jquery.tablesorter": ["jquery.metadata"]
     # Backbone library depends on lodash and jQuery.
     backbone:
       deps: ["lodash", "jquery"]

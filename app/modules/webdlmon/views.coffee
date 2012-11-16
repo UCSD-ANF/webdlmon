@@ -2,18 +2,30 @@ define [
   "app"
 
   # Libs
+  "jquery.tablesorter"
   "backbone"
 
   # Utils
   "modules/webdlmon/utils"
-], (app, Backbone, Utils) ->
+], (app, TableSorter, Backbone, Utils) ->
 
   Views = {}
 
   class Views.DlTable extends Backbone.View
     tagName: "table"
-    className: "webdlmon"
-    #template: 'webdlmon/dltable'
+    className: "tablesorter"
+    id: "webdlmon"
+
+    constructor: (options) ->
+      @tablesorter_injected = false
+      super options
+
+    afterRender: ->
+      if @tablesorter_injected
+        @$el.trigger("update")
+      else
+        @$el.tablesorter()
+        @tablesorter_injected = true
 
   class Views.Thead extends Backbone.View
     tagName: "thead"
@@ -66,6 +78,10 @@ define [
           model: model
       , @
 
+    afterRender: ->
+      # Tell the tablesorter about this change
+      $("#webdlmon").trigger("update")
+
   class Views.DataloggerRow extends Backbone.View
     className: "dlrow"
     tagName:   "tr"
@@ -92,7 +108,7 @@ define [
       return {
         "vals"  : vals
       }
-      
+
     # Return a tuple of [ formattedText, sortValue, color ]
     formatize: (fieldName) ->
       extracted=@model.toJSON()

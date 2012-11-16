@@ -7,6 +7,8 @@
  * Note: All stylesheets are relative to 'assets/css'.
  *
  */
+
+@import "../vendor/tablesorter/style.css";
 @import "webdlmon.css";
 
 /* Put development-only CSS below this line. */
