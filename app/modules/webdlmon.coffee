@@ -54,7 +54,7 @@ define [
       super models, options
 
     parse: (response, xhr) ->
-      parsed = (_ response).map (props) ->
+      parsed = response.dataloggers.map (props) ->
         mapres = props.values
         mapres.dlname = props.name
         return mapres
