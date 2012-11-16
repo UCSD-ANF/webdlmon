@@ -79,8 +79,10 @@ define [
       , @
 
     afterRender: ->
-      # Tell the tablesorter about this change
-      $("#webdlmon").trigger("update")
+      # Trigger the jQuery event "update" on the current element
+      # This will propogate upwards through the DOM to the parent table
+      # element which may have a jquery.tablesorter attached to it.
+      @$el.trigger("update")
 
   class Views.DataloggerRow extends Backbone.View
     className: "dlrow"
