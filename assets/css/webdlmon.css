@@ -1,26 +1,61 @@
 /* Main app */
-table#webdlmon { border:1px solid #A6A6A6;background-color:#E0E0E0;font-size:9px;white-space:nowrap;color:#000 }
-table#webdlmon tr th { border:none;background-color:#E0E0E0;padding:3px;color:#000;cursor:pointer }
-table#webdlmon tr th:hover { background-color:#C2C2C2 }
-table#webdlmon tr .headerSortDown{ background-image:url(/images/jquery/tablesorter/desc.gif);background-color:#C2C2C2;background-repeat:no-repeat; background-position:center right }
-table#webdlmon tr .headerSortUp{ background-image:url(/images/jquery/tablesorter/asc.gif);background-color:#C2C2C2;background-repeat:no-repeat; background-position:center right }
-table#webdlmon tr td { border:1px solid #A6A6A6;border-top:1px solid #FFF;border-left:1px solid #FFF;background-color:#E0E0E0;padding:3px;text-align:center }
-table#webdlmon tr td a { text-decoration:none;cursor:pointer }
-
-/* NEW LAYOUT w/ native jQuery PLUGIN */
-table.webdlmon { border:1px solid #A6A6A6;background-color:#E0E0E0;font-size:9px;white-space:nowrap;color:#000 }
-table.webdlmon tr th { border:none;background-color:#E0E0E0;padding:3px;color:#000;cursor:pointer;min-width:42px; }
-table.webdlmon tr th:hover { background-color:#C2C2C2 }
-table.webdlmon tr .headerSortDown{ background-image:url(/images/jquery/tablesorter/desc.gif);background-color:#C2C2C2;background-repeat:no-repeat; background-position:center right }
-table.webdlmon tr .headerSortUp{ background-image:url(/images/jquery/tablesorter/asc.gif);background-color:#C2C2C2;background-repeat:no-repeat; background-position:center right }
-table.webdlmon tr td { border:1px solid #A6A6A6;border-top:1px solid #FFF;border-left:1px solid #FFF;background-color:#E0E0E0;padding:3px;text-align:center;min-width:42px; }
-table.webdlmon tr td a { text-decoration:none;cursor:pointer }
-
-div#webdlmon-legend { background: url( /images/accordion_bkgrd.png ) repeat }
-div#webdlmon-legend h4 { 
-    display:block;color: #333;padding:3px 3px 3px 24px;margin:0;background: #B3B3C7;
-    border: 1px solid #A6A6A6;border-bottom: 1px dotted #000;cursor:pointer;text-decoration:none;font-weight:bold;
+table#webdlmon {
+  border:1px solid #A6A6A6;
+  background-color:#E0E0E0;
+  white-space:nowrap;
+  color:#000;
 }
-div#webdlmon-legend h4:hover { color:#555 }
-div#webdlmon-errors { display:none; }
-div#webdlmon-loadingdialog { display:none;margin:0 auto; }
+table#webdlmon thead tr th, table#webdlmon tfoot tr th {
+  border:1px solid #A6A6A6;
+  background-color:#E0E0E0;
+  padding:4px;
+  padding-right: 15px; /*make room for the sort arrow*/
+  color: #000;
+  cursor: pointer;
+  font-size: 8pt;
+}
+table#webdlmon tr th:hover {
+  background-color:#C2C2C2;
+}
+table#webdlmon tr td {
+  border: 1px solid #A6A6A6;
+  border-top: 1px solid #FFF;
+  border-left: 1px solid #FFF;
+  background-color: #E0E0E0;
+  padding: 3px;
+  text-align: center;
+  font-size: 9px;
+}
+table#webdlmon tr td a {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Legend */
+div#webdlmon-legend {
+  background: url( ../images/accordion_bkgrd.png ) repeat;
+}
+div#webdlmon-legend h4 { 
+  display: block;
+  color: #333;
+  padding: 3px 3px 3px 24px;
+  margin: 0;
+  background: #B3B3C7;
+  border: 1px solid #A6A6A6;
+  border-bottom: 1px dotted #000;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: bold;
+}
+div#webdlmon-legend h4:hover {
+  color: #555;
+}
+
+/* Other UI Elements */
+div#webdlmon-errors {
+  display: none;
+}
+div#webdlmon-loadingdialog {
+  display: none;
+  margin: 0 auto;
+}
