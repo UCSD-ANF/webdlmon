@@ -93,6 +93,7 @@ define [
       con: (fieldName, dlValues) ->
         color=null
         value = dlValues.con # ignore fieldname
+        return color if !value?
         if value != '-'
           switch value
             when "stopped"
@@ -117,7 +118,9 @@ define [
 
       gp: (fieldName, dlValues) ->
         color=null
-        if dlValues[fieldName] != '-'
+        value=dlValues[fieldName]
+        return color if !value?
+        if value != '-'
           value=parseInt value,10
           if value >= 60
             color="#ff0000"
@@ -129,8 +132,10 @@ define [
 
       nr: (fieldName, dlValues) ->
         color=null
-        if dlValues[fieldName] != '-'
-          if dlValues[fieldName] > 0.0
+        value=dlValues[fieldName]
+        return color if !value?
+        if value != '-'
+          if value > 0.0
             color = "#ff0000"
           else
             color = "#d0d0ff"
@@ -139,20 +144,21 @@ define [
       acok: (fieldName, dlValues) ->
         color = "#ffff00" #unknown
         value = dlValues[fieldName]
-        if value?
-          value=parseInt value
-          if !(isNaN value)
-            if value >=1
-              color = "#00ff00" # good
-            else if value == 0
-              color = "#ff0000" # bad
+        return color if !value?
+        value=parseInt value
+        if !(isNaN value)
+          if value >=1
+            color = "#00ff00" # good
+          else if value == 0
+            color = "#ff0000" # bad
         return color
         
       dlt: (fieldName, dlValues) ->
         # Data latency formatter
-        value = dlValues[fieldName]
-        con = dlValues.con
         color=''
+        value = dlValues[fieldName]
+        return color if !value?
+        con = dlValues.con
         if value != '-'
           color = '#d0d0ff'
           if con == 'waiting'
@@ -176,6 +182,7 @@ define [
         value = dlValues[fieldName]
         con = dlValues.con
         color=''
+        return color if !value?
         if value != '-'
           value = parseInt(value,10)
           color = '#d0d0ff'
@@ -202,6 +209,7 @@ define [
         color=''
         value=dlValues[fieldName]
         con = dlValues.con
+        return color if !value?
         if value != '-'
           if con == 'waiting'
             color = '#d0ffd0'
@@ -226,6 +234,7 @@ define [
       clt: (fieldName, dlValues) ->
         color = ''
         value = dlValues[fieldName]
+        return color if !value?
         if value != '-'
           if value >= 24*3600 # 24 days
             color = '#ffff00'
@@ -240,6 +249,7 @@ define [
         value = dlValues[fieldName]
         con = dlValues.con
         color = ''
+        return color if !value?
         if value != '-'
           if value == 'inf'
             color = '#ff0000'
@@ -260,6 +270,7 @@ define [
       pbr: (fieldName, dlValues) ->
         color=''
         value = dlValues[fieldName]
+        return color if !value?
         if value != '-'
           if value == 'inf'
             color = '#ff0000'
@@ -277,6 +288,7 @@ define [
       nlnp: (fieldName, dlValues) ->
         color = ''
         value = dlValues[fieldName]
+        return color if !value?
         if value != '-'
           if value >= 500.0
             color = '#ff0000'
@@ -291,6 +303,7 @@ define [
       ni24: (fieldName, dlValues) ->
         color = ''
         value = dlValues[fieldName]
+        return color if !value?
         if value != '-'
           if value >= 10.0
             color = '#ff0000'
@@ -304,6 +317,7 @@ define [
       dr: (fieldName, dlValues) ->
         color = ''
         value = dlValues[fieldName]
+        return color if !value?
         if value != '-'
           if value >= Math.pow(10,4)
             color='#d0d0ff'
@@ -317,6 +331,7 @@ define [
       brw24: (fieldName, dlValues) ->
         color = ''
         value = dlValues[fieldName]
+        return color if !value?
         if value != '-'
           color='#d0d0ff'
         return color
@@ -324,6 +339,7 @@ define [
       lcq: (fieldName, dlValues) ->
         color = ''
         value = dlValues[fieldName]
+        return color if !value?
         if value != '-'
           if value == 'inf'
             color = '#ff0000'
@@ -350,6 +366,7 @@ define [
       cld: (fieldName, dlValues) ->
         color = ''
         value = dlValues[fieldName]
+        return color if !value?
         if value != '-'
           aval = Math.abs value
           if aval > 5 * (Math.pow 10,3)
@@ -365,6 +382,7 @@ define [
       massposition: (fieldName, dlValues) ->
         color = ''
         value=dlValues[fieldName]
+        return color if !value?
         if value != '-'
           aval = Math.abs value
           if aval >= 50
@@ -379,6 +397,7 @@ define [
       dt: (fieldName, dlValues) ->
         color = ''
         value = dlValues[fieldName]
+        return color if !value?
         if value != '-'
           if value >= 50.0
             color='#ff0000'
@@ -396,6 +415,7 @@ define [
       dv: (fieldName, dlValues) ->
         color=''
         value=dlValues[fieldName]
+        return color if !value?
         if value != '-'
           if value >= 12 || value <= 14
             color='#a0ffa0'
@@ -408,6 +428,7 @@ define [
       da: (fieldName, dlValues) ->
         color=''
         value = dlValues[fieldName]
+        return color if !value?
         if value != '-'
           if value >= 1.00
             color = '#ff0000'
@@ -419,6 +440,7 @@ define [
       gpss: (fieldName, dlValues) ->
         color=''
         value = dlValues[fieldName]
+        return color if !value?
         if value != '-'
           switch value
             when 'on', 'ona', 'onc'
@@ -438,6 +460,7 @@ define [
       gps: (fieldName, dlValues) ->
         color=''
         value=dlValues[fieldName]
+        return color if !value?
         fr=0
         el=0
         d=0
@@ -490,6 +513,7 @@ define [
       clq: (fieldName, dlValues) ->
         color=''
         value=dlValues[fieldName]
+        return color if !value?
         if value != '-'
           switch value
             when '5', 'l', 'ex', 'g'
@@ -509,12 +533,14 @@ define [
       latlon: (fieldName, dlValues) ->
         color=''
         value=dlValues[fieldName]
+        return color if !value?
         color = '#d0d0ff' if value != '-'
         color
         
       pmp: (fieldName, dlValues) ->
         color = ''
         value = dlValues['opt']
+        return color if !value?
         spi=0
         spo=0
         spi = 1 if value.match /isp1/
@@ -570,6 +596,7 @@ define [
       gp: (fieldName, dlValues) ->
         txt="" # default return value
         value = dlValues[fieldName]
+        return txt if !value?
         if value != "-"
           value = parseInt value,10
           if value >= 86400
@@ -587,6 +614,7 @@ define [
       nr: (fieldName, dlValues) ->
         txt='' # default return value
         value = dlValues[fieldName]
+        return txt if !value?
         if(value != '-')
           value = parseInt value, 10
           txt = _s.sprintf "%.0f", value
@@ -595,6 +623,7 @@ define [
       acok: (fieldName, dlValues) ->
         txt = "-" # default return value
         value = dlValues[fieldName]
+        return txt if !value?
         if value?
           value=parseInt value
           if !(isNaN value)
@@ -606,12 +635,14 @@ define [
         
       dhms: (fieldName, dlValues) ->
         value = dlValues[fieldName]
+        return txt if !value?
         if value? && value != '-'
           [d, h, m, s, sign] = Utils.get_dhms value
           return Utils.format_dhms d,h,m,s,sign
           
       tput: (fieldName, dlValues) ->
         value = dlValues[fieldName]
+        return txt if !value?
         txt=''
         if value == 'inf'
           txt = 'inf'
@@ -622,12 +653,14 @@ define [
       percentage: (fieldName, dlValues) ->
         txt = '-'
         value = dlValues[fieldName]
+        return txt if !value?
         if value? && value != '-'
           txt = _s.sprintf '%d%%', +value
         return txt
         
       nlnpni: (fieldName, dlValues) ->
         value=dlValues[fieldName]
+        return txt if !value?
         txt = ''
         if value != '-'
           txt = _s.sprintf '%d', +value
@@ -638,6 +671,7 @@ define [
         # dlmon was using powers of 10 for formatting
         # Maybe this should be powers of 8?
         value = dlValues[fieldName]
+        return txt if !value?
         txt = ''
         if value != '-'
           value = parseInt(value)
@@ -661,6 +695,7 @@ define [
         # Convert microseconds to human readable seconds
         txt = ''
         value = dlValues[fieldName]
+        return txt if !value?
         if value != '-'
           aval = Math.abs value
           if aval >= Math.pow(10,4)
@@ -674,6 +709,8 @@ define [
         # format degrees given in Centigrade as a whole number
         txt = ''
         value = dlValues[fieldName]
+        return txt if !value?
+        return txt if !value?
         if value != '-'
           txt = _s.sprintf '%dC', +value
         return txt
@@ -681,6 +718,8 @@ define [
       volts: (fieldName, dlValues) ->
         txt = ''
         value = dlValues[fieldName]
+        return txt if !value?
+        return txt if !value?
         if value != '-'
           txt = _s.sprintf '%.1fV', +value
         txt
@@ -688,12 +727,14 @@ define [
       ampsInMilliamps: (fieldName, dlValues) ->
         txt = ''
         value = dlValues[fieldName]
+        return txt if !value?
         if value != '-'
           txt = _s.sprintf '%dmA', value*1000
           
       gps: (fieldName, dlValues) ->
         txt=''
         value=dlValues[fieldName]
+        return txt if !value?
         fr=0
         el=0
         d=0
@@ -725,7 +766,7 @@ define [
       clq: (fieldName, dlValues) ->
         txt = ''
         value = dlValues[fieldName]
-        
+        return txt if !value?
         if value != '-'
           switch value
             when '5', 'l'
@@ -749,6 +790,7 @@ define [
       latlon: (fieldName, dlValues) ->
         txt = ''
         value = dlValues[fieldName]
+        return txt if !value?
         if value != '-'
           txt = _s.sprintf '%.2f', +value
         txt
@@ -756,6 +798,7 @@ define [
       elev: (fieldName, dlValues) ->
         txt = ''
         value = dlValues[fieldName]
+        return txt if !value?
         if value != '-'
           txt = _s.sprintf '%dm', value*1000.0
         txt
@@ -763,6 +806,7 @@ define [
       pmp: (fieldName, dlValues) ->
         txt = ''
         value = dlValues['opt']
+        return txt if !value?
         if value != '-'
           spi = 0
           spo = 0
