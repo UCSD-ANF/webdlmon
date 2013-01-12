@@ -32,7 +32,7 @@ table#webdlmon tr td a {
 }
 
 /* Legend */
-div#webdlmon-legend {
+/*div#webdlmon-legend {
   background: url( ../images/accordion_bkgrd.png ) repeat;
 }
 div#webdlmon-legend h4 { 
@@ -50,7 +50,7 @@ div#webdlmon-legend h4 {
 div#webdlmon-legend h4:hover {
   color: #555;
 }
-
+*/
 /* Other UI Elements */
 div#webdlmon-errors {
   display: none;
