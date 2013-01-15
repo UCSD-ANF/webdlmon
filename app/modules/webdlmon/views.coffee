@@ -127,4 +127,40 @@ define [
         graph: graph
       return res
 
+  class Views.GraphShow extends Backbone.View
+    template: "webdlmon/graphshow"
+
+    _default_twin: 'w'
+
+    _validate_twin: (twin) ->
+      valid_twins = ['h', 'd', 'w', 'm', 'lifetime']
+      unless twin in valid_twins
+        console.log "Invalid twin, must be one of" . valid_twins.join(", ")
+        return false
+      return true
+
+    initialize: (options) ->
+      @apiurl = options["apiurl"] ? app.graphapiurl
+      @chan = options["chan"] ? "da"
+
+      twin = options["twin"] ? @_default_twin
+      @_validate_twin twin or twin = @_default_twin
+      @twin=twin
+      @ # return "this" for chaining
+
+    set_twin: (twin) ->
+      @_validate_twin twin or twin = @_default_twin
+      @twin=twin
+      @
+
+    serialize: ->
+      [net, sta] = @model.get("dlname").split("_")
+      return {
+        apibase: @apiurl
+        net: net
+        sta: sta
+        chan: @chan
+        twin: @twin
+      }
+
   return Views

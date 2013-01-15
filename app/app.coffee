@@ -63,6 +63,8 @@ define [
       "elev"
       "acok"
     ]
+
+    graphapiurl: "http://anf.ucsd.edu/api/rrd/plot/"
     
     station_status_defs:
       dlname:

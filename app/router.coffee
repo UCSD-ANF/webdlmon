@@ -14,19 +14,29 @@ define [
       "": "index"
 
     graph: (dlname, field) ->
+      app.useLayout "graph"
+
+      dlmodels = app.dataloggers.where({dlname: dlname})
+      dlmodel=(_ dlmodels).first()
+      graphshowview = app.layout.setView "#graphplot",
+        new Webdlmon.Views.GraphShow
+          chan: field
+          model: dlmodel
+
+      app.layout.render()
       console.log "Route 'dataloggers/#{dlname}/graph/#{field}' matched to 'graph'"
 
     index: ->
       dlsFactory = new Webdlmon.DataloggersFactory
-      dataloggers = dlsFactory.makeDataloggers app.dataloggersfeed.type
-      dataloggers.url=app.dataloggersfeed.url
+      app.dataloggers = dlsFactory.makeDataloggers app.dataloggersfeed.type
+      app.dataloggers.url=app.dataloggersfeed.url
 
       stationsFactory = new Webdlmon.StationsFactory
-      stations = stationsFactory.makeStations app.stationsfeed.type
-      stations.url=app.stationsfeed.url
+      app.stations = stationsFactory.makeStations app.stationsfeed.type
+      app.stations.url=app.stationsfeed.url
 
       # Use the main layout
-      app.useLayout("main")
+      app.useLayout "main"
 
       # Insert the dltable
       mainTableView = app.layout.setView "#dltable", new Webdlmon.Views.DlTable
@@ -35,7 +45,7 @@ define [
       mainTableView.setView new Webdlmon.Views.Thead
 
       # Append the table body
-      mainTableView.setView new Webdlmon.Views.Tbody({collection: dataloggers}),
+      mainTableView.setView new Webdlmon.Views.Tbody({collection: app.dataloggers}),
         true
 
       # Insert the Legend
@@ -44,7 +54,7 @@ define [
       app.layout.render()
 
       # Fetch the data
-      dataloggers.fetch()
-      stations.fetch()
+      app.dataloggers.fetch()
+      app.stations.fetch()
 
   return Router
