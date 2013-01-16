@@ -13,20 +13,7 @@ define [
       'dataloggers/:dlname/graph/:field' : 'graph'
       "": "index"
 
-    graph: (dlname, field) ->
-      app.useLayout "graph"
-
-      dlmodels = app.dataloggers.where({dlname: dlname})
-      dlmodel=(_ dlmodels).first()
-      graphshowview = app.layout.setView "#graphplot",
-        new Webdlmon.Views.GraphShow
-          chan: field
-          model: dlmodel
-
-      app.layout.render()
-      console.log "Route 'dataloggers/#{dlname}/graph/#{field}' matched to 'graph'"
-
-    index: ->
+    initialize: (options) ->
       dlsFactory = new Webdlmon.DataloggersFactory
       app.dataloggers = dlsFactory.makeDataloggers app.dataloggersfeed.type
       app.dataloggers.url=app.dataloggersfeed.url
@@ -34,6 +21,27 @@ define [
       stationsFactory = new Webdlmon.StationsFactory
       app.stations = stationsFactory.makeStations app.stationsfeed.type
       app.stations.url=app.stationsfeed.url
+
+      # Fetch the data
+      app.dataloggers.fetch()
+      app.stations.fetch()
+
+    graph: (dlname, field) ->
+      console.log "Route 'dataloggers/#{dlname}/graph/#{field}' matched to 'graph'"
+      app.useLayout "graph"
+
+      #dlmodels = app.dataloggers.where({dlname: dlname})
+      #dlmodel=(_ dlmodels).first()
+      graphshowview = app.layout.setView "#graphplot",
+        new Webdlmon.Views.GraphShow
+          dlname: dlname
+          chan: field
+          #model: dlmodel
+
+      app.layout.render()
+
+
+    index: ->
 
       # Use the main layout
       app.useLayout "main"
@@ -52,9 +60,5 @@ define [
       app.layout.setView "#webdlmon-legend", new Webdlmon.Views.DlmonLegend
 
       app.layout.render()
-
-      # Fetch the data
-      app.dataloggers.fetch()
-      app.stations.fetch()
 
   return Router

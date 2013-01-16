@@ -1,0 +1,17 @@
+# Remove the trailing slash from routes
+DirectorySlash Off
+
+# Enable the RewriteEngine
+RewriteEngine on
+
+# Map resources to development
+RewriteRule ^/~davis/dlmon/app/(.*)$ /~davis/dlmon/app/$1 [NC,L]
+RewriteRule ^/~davis/dlmon/assets/(.*)$ /~davis/dlmon/assets/$1 [NC,L]
+
+# These conditions ensure that the file does not exist and that the current
+# request URI is not the index.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_URI} !/~davis/dlmon/index
+
+# Redirect remaining requests to the index.html file
+RewriteRule (.*) /~davis/dlmon/index.html [NC,L]

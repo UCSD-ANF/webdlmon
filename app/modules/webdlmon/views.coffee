@@ -128,9 +128,17 @@ define [
       return res
 
   class Views.GraphShow extends Backbone.View
+    # TODO: This implementation breaks the Model/View separation in a big way.
+    # The view is tracking the dlname since the graphing API has no need for
+    # any of the other information in the datalogger model, and we can't
+    # always assume that we have loaded the dataloggerCollection from the AJAX
+    # call if this is the first load of the application.
+    # Perhaps a better approach is to instantiate a model just for this view,
+    # and allow it to reference the datalogger model as a property.
     template: "webdlmon/graphshow"
 
     _default_twin: 'w'
+    _default_dlname: "ZZ_ZZZZ"
 
     _validate_twin: (twin) ->
       valid_twins = ['h', 'd', 'w', 'm', 'lifetime']
@@ -144,8 +152,10 @@ define [
       @chan = options["chan"] ? "da"
 
       twin = options["twin"] ? @_default_twin
-      @_validate_twin twin or twin = @_default_twin
-      @twin=twin
+      @set_twin twin
+
+      dlname = options["dlname"] ? @_default_dlname
+      @set_dlname dlname
       @ # return "this" for chaining
 
     set_twin: (twin) ->
@@ -153,12 +163,15 @@ define [
       @twin=twin
       @
 
+    set_dlname: (dlname) ->
+      @dlname=dlname
+      [@net, @sta] = dlname.split("_")
+
     serialize: ->
-      [net, sta] = @model.get("dlname").split("_")
       return {
         apibase: @apiurl
-        net: net
-        sta: sta
+        net: @net
+        sta: @sta
         chan: @chan
         twin: @twin
       }
