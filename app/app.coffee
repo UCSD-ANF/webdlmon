@@ -451,11 +451,12 @@ api - Wiring Error"""
       @layout.remove if @layout
 
       # Create a new Layout with options.
-      layout = new Backbone.Layout _.extend
-        template: name
-        className: "layout #{name}"
-        id: "layout"
-      , options
+      layout = new Backbone.Layout (
+        _.extend {
+          template: name
+          className: "layout #{name}"
+          id: "layout"
+        }, options )
 
       # Insert into the DOM.
       $("#main").empty().append(layout.el)
