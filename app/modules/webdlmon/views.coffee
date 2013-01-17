@@ -71,12 +71,10 @@ define [
     tagName: "tbody"
     initialize: ->
       @collection.on 'reset', @render, @
+      @collection.on 'add', @addOne, @
 
     beforeRender: ->
-      @collection.each (model) ->
-        @insertView new Views.DataloggerRow
-          model: model
-      , @
+      @addAll()
 
     afterRender: ->
       # Trigger the jQuery event "update" on the current element
@@ -84,19 +82,26 @@ define [
       # element which may have a jquery.tablesorter attached to it.
       @$el.trigger("update")
 
+    addAll: ->
+      @collection.each @addOne, @
+      return @
+
+    addOne: (model) ->
+      view = new Views.DataloggerRow
+        model: model
+      #view.render()
+      @insertView view, @
+      model.on 'remove', view.remove, view
+      return @
+
   class Views.DataloggerRow extends Backbone.View
     className: "dlrow"
     tagName:   "tr"
     template:  "webdlmon/dlrow"
 
     initialize: ->
-      @model.on "change", ->
-        @render()
-      , @ # return this object for chaining
-
-      @model.on "destroy", ->
-        @remove()
-      , @ # return this object for chaining
+      @model.on "change", @render, @
+      @model.on "destroy", @remove, @
 
     serialize: ->
       vals = []
