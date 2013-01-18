@@ -22,6 +22,15 @@ define [
       app.stations = stationsFactory.makeStations app.stationsfeed.type
       app.stations.url=app.stationsfeed.url
 
+      # Cache a reference to the main table
+      app.dltable = new Webdlmon.Views.DlTable
+      # Set the first child view of the main table
+      app.dltable.setView new Webdlmon.Views.Thead
+
+      # Append the table body
+      app.dltable.setView new Webdlmon.Views.Tbody({collection: app.dataloggers}),
+        true
+
       # Fetch the data
       app.dataloggers.fetch()
       app.stations.fetch()
@@ -47,14 +56,7 @@ define [
       app.useLayout "main"
 
       # Insert the dltable
-      mainTableView = app.layout.setView "#dltable", new Webdlmon.Views.DlTable
-
-      # Set the first child view of the main table
-      mainTableView.setView new Webdlmon.Views.Thead
-
-      # Append the table body
-      mainTableView.setView new Webdlmon.Views.Tbody({collection: app.dataloggers}),
-        true
+      mainTableView = app.layout.setView "#dltable", app.dltable
 
       # Insert the Legend
       app.layout.setView "#webdlmon-legend", new Webdlmon.Views.DlmonLegend
