@@ -141,44 +141,50 @@ define [
     # Perhaps a better approach is to instantiate a model just for this view,
     # and allow it to reference the datalogger model as a property.
     template: "webdlmon/graphshow"
-
-    _default_twin: 'w'
-    _default_dlname: "ZZ_ZZZZ"
-
-    _validate_twin: (twin) ->
-      valid_twins = ['h', 'd', 'w', 'm', 'lifetime']
-      unless twin in valid_twins
-        console.log "Invalid twin, must be one of" . valid_twins.join(", ")
-        return false
-      return true
+    events:
+      'click .twin.prev': 'prevTimeWindow'
+      'click .twin.next': 'nextTimeWindow'
 
     initialize: (options) ->
       @apiurl = options["apiurl"] ? app.graphapiurl
-      @chan = options["chan"] ? "da"
 
-      twin = options["twin"] ? @_default_twin
-      @set_twin twin
-
-      dlname = options["dlname"] ? @_default_dlname
-      @set_dlname dlname
+      @model.bind 'change', @.render, @
       @ # return "this" for chaining
 
-    set_twin: (twin) ->
-      @_validate_twin twin or twin = @_default_twin
-      @twin=twin
-      @
-
-    set_dlname: (dlname) ->
-      @dlname=dlname
-      [@net, @sta] = dlname.split("_")
+    getNetSta: ->
+      dlname = @model.get 'dlname'
+      [net, sta] = dlname.split '_'
+      console.log "Views.Graphshow Net:"+net+" Sta:"+sta, dlname
+      [net, sta]
 
     serialize: ->
+      [net, sta] = @getNetSta()
       return {
         apibase: @apiurl
-        net: @net
-        sta: @sta
-        chan: @chan
-        twin: @twin
+        net: net
+        sta: sta
+        chan: @model.get 'chan'
+        twin: @model.get 'timeWindow'
       }
+      
+    nextTimeWindow: ->
+      @model.nextTimeWindow()
 
+    prevTimeWindow: ->
+      @model.prevTimeWindow()
+      
+  class Views.GraphDescription extends Backbone.View
+    template: "webdlmon/graphdescription"
+    
+    initialize: (options) ->
+      @model.bind 'change', @render, @
+      @
+      
+    serialize: ->
+      return {
+        dlname: @model.get 'dlname'
+        chan: @model.get 'chan'
+        timeWindow: @model.get 'timeWindow'
+      }
+        
   return Views
