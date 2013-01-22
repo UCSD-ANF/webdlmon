@@ -122,6 +122,61 @@ define [
         when "db2json" then new Webdlmon.Db2jsonStations models, options
         else new Webdlmon.Stations models, options
 
+  # Grapher
+  # -------
+  # Model the internal state of the graph viewer sub-application
+  class Webdlmon.Grapher extends Backbone.Model
+    defaults:
+      timeWindow: 'w'
+      
+    _valid_twins: ['h', 'd', 'w', 'm', 'y', 'lifetime']
+
+    _validate_timeWindow: (twin) ->
+      unless twin in @valid_twins
+        console.log "Invalid twin, must be one of" + @_valid_twins.join(", ")
+        return false
+      return true
+
+    initialize: (options) ->
+      _.bindAll @, 'nextTimeWindow', 'prevTimeWindow'
+      @dlname = options.dlname
+      @chan = options.chan
+      #@dataloggers = @options.dataloggers
+      
+    currentTimeWindow: ->
+      return @timeWindow
+
+    isLastTimeWindow: (twin) ->
+      currentTwinIndex = @_valid_twins.indexOf twin
+      return currentTwinIndex >= (@_valid_twins.length - 1)
+
+    isFirstTimeWindow: (twin) ->
+      currentTwinIndex = @_valid_twins.indexOf twin
+      return currentTwinIndex == 0
+
+    nextTimeWindow: ->
+      currentTwin = @.get 'timeWindow'
+      currentTwinIndex = @_valid_twins.indexOf currentTwin
+      console.log "nextTimeWindow: Old " + @.get 'timeWindow'
+      if @isLastTimeWindow currentTwin
+        currentTwinIndex = 0
+      else
+        currentTwinIndex++
+      @.set 'timeWindow', @_valid_twins[currentTwinIndex]
+      console.log "nextTimeWindow: New " + @.get 'timeWindow'
+      @
+      
+    prevTimeWindow: ->
+      currentTwin = @.get 'timeWindow'
+      currentTwinIndex = @_valid_twins.indexOf currentTwin
+      if @isFirstTimeWindow currentTwin
+        currentTwinIndex = @_valid_twins.length - 1
+      else
+        currentTwinIndex--
+      @.set 'timeWindow', @_valid_twins[currentTwinIndex]
+      console.log "prevTimeWindow: Old " + currentTwin + " New " + @.get 'timeWindow'
+      @
+
   # Webdlmon Views
   # --------------
 

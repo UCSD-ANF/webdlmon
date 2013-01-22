@@ -22,15 +22,6 @@ define [
       app.stations = stationsFactory.makeStations app.stationsfeed.type
       app.stations.url=app.stationsfeed.url
 
-      # Cache a reference to the main table
-      app.dltable = new Webdlmon.Views.DlTable
-      # Set the first child view of the main table
-      app.dltable.setView new Webdlmon.Views.Thead
-
-      # Append the table body
-      app.dltable.setView new Webdlmon.Views.Tbody({collection: app.dataloggers}),
-        true
-
       # Fetch the data
       app.dataloggers.fetch()
       app.stations.fetch()
@@ -41,11 +32,19 @@ define [
 
       #dlmodels = app.dataloggers.where({dlname: dlname})
       #dlmodel=(_ dlmodels).first()
+      
+      # Set up the grapher
+      grapher = new Webdlmon.Grapher
+        dlname: dlname
+        chan: field
+      
       graphshowview = app.layout.setView "#graphplot",
         new Webdlmon.Views.GraphShow
-          dlname: dlname
-          chan: field
-          #model: dlmodel
+          model: grapher
+
+      app.layout.setView "#graphdescription",
+        new Webdlmon.Views.GraphDescription
+          model: grapher
 
       app.layout.render()
 
@@ -56,7 +55,14 @@ define [
       app.useLayout "main"
 
       # Insert the dltable
-      mainTableView = app.layout.setView "#dltable", app.dltable
+      dltable = app.layout.setView "#dltable", new Webdlmon.Views.DlTable
+      
+      # Set the first child view of the main table
+      dltable.setView new Webdlmon.Views.Thead
+
+      # Append the table body
+      dltable.setView new Webdlmon.Views.Tbody({collection: app.dataloggers}),
+        true
 
       # Insert the Legend
       app.layout.setView "#webdlmon-legend", new Webdlmon.Views.DlmonLegend
