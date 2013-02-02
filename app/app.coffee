@@ -17,7 +17,7 @@ define [
     dataloggersfeed:
       #url: "http://anf.ucsd.edu/tools/webdlmon/data.php?callback=?"
       #type: "orbdlstat2xmljson"
-      url: "http://anfdevl.ucsd.edu:7000/http/dlmon/instances/dlmon/status.json?callback=?"
+      url: "http://anfdevl.ucsd.edu:7000/http/dlmon/instances/ta/status.json?callback=?"
       type: "dlmon"
 
     stationsfeed:
