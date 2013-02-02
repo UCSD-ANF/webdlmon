@@ -39,13 +39,13 @@ define [
         # mimics the original procedure used in dlmon rather than the
         # XSLT webdlmon method
         runstat = dlValues.con
-        sortorder = "1_#{dlValues[keyName]}" # default value
+        sortorder = "1_#{dlValues['id']}" # default value
         if runstat?
           if ( runstat == "no" && dlValues.rtm > -3600.0)
             runstat = "su"
             dlValues[con] = runstat
           sortorder = Utils.sortorder "con", dlValues
-          sortorder = "#{sortorder}_#{dlValues[keyName]}"
+          #sortorder = "#{sortorder}_#{dlValues['id']}"
         return sortorder
 
 
@@ -565,6 +565,8 @@ define [
       
       # Otherwise, Lookup table for fieldnames without a dedicated formatter
       switch fieldName
+        when "dlname"
+          return dlValues["id"]
         when "gp1","gp24"
           return @formatters.gp fieldName, dlValues
         when "nr24"

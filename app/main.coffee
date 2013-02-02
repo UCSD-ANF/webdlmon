@@ -11,7 +11,10 @@ require [
 
   # Define your master router on the application namespace and trigger
   # all navigation from this instance
-  app.router = new Router()
+  app.router = new Router
+    dataloggersFeed: app.dataloggersFeed
+    stationsFeed: app.stationsFeed
+    updateInterval: app.updateInterval
 
   # Trigger the initial route and enable HTML5 History API support,
   # set the root foler to '/' by default. Change in app.coffee.

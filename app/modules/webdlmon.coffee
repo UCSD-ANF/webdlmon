@@ -18,7 +18,7 @@ define [
   # Datalogger Model
   # ----------------
   class Webdlmon.Datalogger extends Backbone.Model
-    idAttribute = "dlname"
+    #idAttribute = "dlname"
 
   # Dataloggers Collection
   # ----------------------
@@ -40,7 +40,7 @@ define [
       # flatten returned dataloggers objects
       parsed = (_ response.dataloggers).map (props, dlname, list) ->
         mapres = props.values
-        mapres.dlname=dlname
+        mapres.id=dlname
         return mapres
       return parsed
 
@@ -56,7 +56,7 @@ define [
     parse: (response, xhr) ->
       parsed = response.instance_status.dataloggers.map (props) ->
         mapres = props.values
-        mapres.dlname = props.name
+        mapres.id = props.name
         return mapres
         
       return parsed
