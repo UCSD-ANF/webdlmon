@@ -74,6 +74,7 @@ define [
       @collection.on 'add', @addOne, @
 
     beforeRender: ->
+      console.log "Views.Tbody.beforeRender called"
       @addAll()
 
     afterRender: ->
@@ -100,8 +101,11 @@ define [
     template:  "webdlmon/dlrow"
 
     initialize: ->
-      @model.on "change", @render, @
-      @model.on "destroy", @remove, @
+      @model.on "change", @.render, @
+      @model.on "destroy", @.remove, @
+
+    beforeRender: ->
+      console.log "Rendering view %s", @model.id
 
     serialize: ->
       vals = []
@@ -124,7 +128,7 @@ define [
       color = Utils.colorize fieldName, extracted
       graph = Utils.hasgraph fieldName
       res =
-        id: @model.get "dlname"
+        id: @model.id
         field: fieldName
         txt: txt
         sort: sort
@@ -133,13 +137,6 @@ define [
       return res
 
   class Views.GraphShow extends Backbone.View
-    # TODO: This implementation breaks the Model/View separation in a big way.
-    # The view is tracking the dlname since the graphing API has no need for
-    # any of the other information in the datalogger model, and we can't
-    # always assume that we have loaded the dataloggerCollection from the AJAX
-    # call if this is the first load of the application.
-    # Perhaps a better approach is to instantiate a model just for this view,
-    # and allow it to reference the datalogger model as a property.
     template: "webdlmon/graphshow"
     events:
       'click .twin.prev': 'prevTimeWindow'

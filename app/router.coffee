@@ -12,19 +12,33 @@ define [
     routes:
       'dataloggers/:dlname/graph/:field' : 'graph'
       "": "index"
+      
+    updateInterval: 30 # default interval for long poll
 
     initialize: (options) ->
+      @updateInterval = options.updateInterval if options.updateInterval?
+      
       dlsFactory = new Webdlmon.DataloggersFactory
-      app.dataloggers = dlsFactory.makeDataloggers app.dataloggersfeed.type
-      app.dataloggers.url=app.dataloggersfeed.url
+      app.dataloggers = dlsFactory.makeDataloggers options.dataloggersFeed.type
+      app.dataloggers.url=options.dataloggersFeed.url
 
       stationsFactory = new Webdlmon.StationsFactory
-      app.stations = stationsFactory.makeStations app.stationsfeed.type
-      app.stations.url=app.stationsfeed.url
+      app.stations = stationsFactory.makeStations options.stationsFeed.type
+      app.stations.url=options.stationsFeed.url
 
-      # Fetch the data
+      # Perform the initial fetch of the collections
       app.dataloggers.fetch()
       app.stations.fetch()
+
+      # Set up a long-poll of the dataloggers collection
+      app.dataloggersUpdateIntervalId = setInterval @dlLongPoll,
+      @updateInterval * 1000 # convert ms to seconds
+
+    dlLongPoll: ->
+      console.log "firing dlLongPoll", app.dataloggers
+      app.dataloggers.fetch
+        update: true
+        #remove: false
 
     graph: (dlname, field) ->
       console.log "Route 'dataloggers/#{dlname}/graph/#{field}' matched to 'graph'"
