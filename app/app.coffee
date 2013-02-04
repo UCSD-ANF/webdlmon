@@ -15,10 +15,10 @@ define [
     root: "/~davis/dlmon/"
 
     dataloggersFeed:
-      url: "http://anf.ucsd.edu/tools/webdlmon/data.php?callback=?"
-      type: "orbdlstat2xmljson"
-      #url: "http://anfdevl.ucsd.edu:7000/http/dlmon/instances/ta/status.json?callback=?"
-      #type: "dlmon"
+      #url: "http://anf.ucsd.edu/tools/webdlmon/data.php?callback=?"
+      #type: "orbdlstat2xmljson"
+      url: "http://anfdevl.ucsd.edu:7000/http/dlmon/instances/ta/status.json?callback=?"
+      type: "dlmon"
 
     stationsFeed:
       url: "http://anf.ucsd.edu/stations/data.php?callback=?"

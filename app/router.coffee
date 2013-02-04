@@ -35,7 +35,7 @@ define [
       @updateInterval * 1000 # convert ms to seconds
 
     dlLongPoll: ->
-      console.log "firing dlLongPoll", app.dataloggers
+      console.log "firing dlLongPoll"
       app.dataloggers.fetch
         update: true
         #remove: false
