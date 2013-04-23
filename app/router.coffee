@@ -11,13 +11,13 @@ define [
   Router = Backbone.Router.extend
     routes:
       'dataloggers/:dlname/graph/:field' : 'graph'
-      "": "index"
-      
+      "": "dlmonInstance"
+
     updateInterval: 30 # default interval for long poll
 
     initialize: (options) ->
       @updateInterval = options.updateInterval if options.updateInterval?
-      
+
       dlsFactory = new Webdlmon.DataloggersFactory
       app.dataloggers = dlsFactory.makeDataloggers options.dataloggersFeed.type
       app.dataloggers.url=options.dataloggersFeed.url
@@ -41,17 +41,18 @@ define [
         #remove: false
 
     graph: (dlname, field) ->
-      console.log "Route 'dataloggers/#{dlname}/graph/#{field}' matched to 'graph'"
+      console.log "Route 'dataloggers/#{dlname}/graph/#{field}' " +
+        "matched to 'graph'"
       app.useLayout "graph"
 
       #dlmodels = app.dataloggers.where({dlname: dlname})
       #dlmodel=(_ dlmodels).first()
-      
+
       # Set up the grapher
       grapher = new Webdlmon.Grapher
         dlname: dlname
         chan: field
-      
+
       graphshowview = app.layout.setView "#graphplot",
         new Webdlmon.Views.GraphShow
           model: grapher
@@ -63,14 +64,14 @@ define [
       app.layout.render()
 
 
-    index: ->
+    dlmonInstance: ->
 
       # Use the main layout
-      app.useLayout "main"
+      app.useLayout "dlmonInstance"
 
       # Insert the dltable
       dltable = app.layout.setView "#dltable", new Webdlmon.Views.DlTable
-      
+
       # Set the first child view of the main table
       dltable.setView new Webdlmon.Views.Thead
 
