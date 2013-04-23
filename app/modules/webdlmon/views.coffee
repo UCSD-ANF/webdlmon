@@ -33,28 +33,28 @@ define [
 
     serialize: ->
       # Map the displayed names of the fields that we are to show
-      
+
       sds=app.station_status_defs
       fields=app.showFields
-      
+
       res=fields.map (field) ->
         sd = {}
         sd = sds[field] if sds[field]?
         sd=(_ sd).defaults({title: field, description: field})
         sd=(_ sd).pick('title','description')
         return sd
-        
+
       return {
         "showFields": res
       }
 
   class Views.DlmonLegend extends Backbone.View
     template: "webdlmon/legend"
-    
+
     serialize: ->
       fields=app.showFields
       sds=app.station_status_defs
-      
+
       res=fields.map (field) ->
         sd = {}
         sd = sds[field] if sds[field]?
@@ -111,10 +111,10 @@ define [
       vals = []
       # Handle dlname explicitly since we always want it to appear
       #vals.push @formatize 'dlname'
-      
+
       # Loop through showFields and format the values we need
       vals.push @formatize(fieldName) for fieldName in app.showFields
-      
+
       # return the data for use by the template
       return {
         "vals"  : vals
@@ -163,25 +163,25 @@ define [
         chan: @model.get 'chan'
         twin: @model.get 'timeWindow'
       }
-      
+
     nextTimeWindow: ->
       @model.nextTimeWindow()
 
     prevTimeWindow: ->
       @model.prevTimeWindow()
-      
+
   class Views.GraphDescription extends Backbone.View
     template: "webdlmon/graphdescription"
-    
+
     initialize: (options) ->
       @model.bind 'change', @render, @
       @
-      
+
     serialize: ->
       return {
         dlname: @model.get 'dlname'
         chan: @model.get 'chan'
         timeWindow: @model.get 'timeWindow'
       }
-        
+
   return Views
