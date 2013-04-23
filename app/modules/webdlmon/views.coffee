@@ -70,8 +70,8 @@ define [
   class Views.Tbody extends Backbone.View
     tagName: "tbody"
     initialize: ->
-      @collection.on 'reset', @render, @
-      @collection.on 'add', @addOne, @
+      @.listenTo @collection, 'reset', @render
+      @.listenTo @collection, 'add', @addOne
 
     beforeRender: ->
       console.log "Views.Tbody.beforeRender called"
@@ -92,7 +92,6 @@ define [
         model: model
       #view.render()
       @insertView view, @
-      model.on 'remove', view.remove, view
       return @
 
   class Views.DataloggerRow extends Backbone.View
@@ -101,8 +100,9 @@ define [
     template:  "webdlmon/dlrow"
 
     initialize: ->
-      @model.on "change", @.render, @
-      @model.on "destroy", @.remove, @
+      @.listenTo @model, 'change', @.render
+      @.listenTo @model, 'destroy', @.remove
+      @.listenTo @model, 'remove', @.remove
 
     beforeRender: ->
       console.log "Rendering view %s", @model.id
@@ -135,6 +135,10 @@ define [
         color: color
         graph: graph
       return res
+
+    remove: ->
+      console.log "Removing view %s", @model.id
+      super()
 
   class Views.GraphShow extends Backbone.View
     template: "webdlmon/graphshow"
